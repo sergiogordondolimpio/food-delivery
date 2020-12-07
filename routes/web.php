@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,59 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+$data = [
+    'title' => 'Card Title',
+    'description' => "Some quick example text to build on the card title and make up the bulk of the card's content.",
+    'price' => '$ 1.10',
+    'file' => '',
+    'titlePreview' => '',
+    'descriptionPreview' => '',
+    'pricePreview' => '',
+    'filePreview' => '',
+    ];
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
+});
+
+Route::get('/addProduct', function () {
+    $data = [
+        'titlePreview' => 'Card Title',
+        'descriptionPreview' => "Some quick example text to build on the card title and make up the bulk of the card's content.",
+        'pricePreview' => '$ 1.10',
+        'filePreview' => '',
+        ];
+    return view('/products/addProduct', $data);
+});
+
+Route::post('/addProduct', function () {
+    $data = [
+        'titlePreview' => '',
+        'descriptionPreview' => '',
+        'pricePreview' => '',
+        'filePreview' => '',
+        ];
+
+    $request = Request::all();
+    if ($request['title']){
+        //Arr::add($data, 'titlePreview', $data['title']);
+        $data['titlePreview'] = $request['title']; 
+        $data['title'] = $request['title']; 
+        //dd($data); 
+    }
+    if ($request['description']){
+        //Arr::add($data, 'titlePreview', $data['title']);
+        $data['descriptionPreview'] = $request['description']; 
+        $data['description'] = $request['description']; 
+        //dd($data); 
+    }
+    if ($request['price']){
+        //Arr::add($data, 'titlePreview', $data['title']);
+        $data['pricePreview'] = "$ {$request['price']}"; 
+        //dd($data); 
+    }
+    
+
+    return view('/products/addProduct', $data);
+    
 });
