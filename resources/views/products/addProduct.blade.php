@@ -15,7 +15,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6 card p-4 m-4">
-                <form action="/addProduct" method="POST">
+                <form action="/addProduct" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                       <label>Title</label>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="form-group">
                         <label>Select Image</label>
-                        <input id="image" type="file" class="form-control-file">
+                        <input name="file" id="image" type="file" class="form-control-file">
                     </div>
                     <button type="submit" class="btn btn-primary">Add</button>
                     <a class="btn btn-primary" href="/addProduct">Preview</a>
@@ -39,7 +39,7 @@
             </div>
             <div class="col card p-4 m-4">
                 <div class="card" style="width: 25rem;">
-                    <img class="card-img-top" src="{{asset('storage/docs/food-image1.PNG')}}" alt="Card image cap">
+                    <img class="card-img-top" src="{{asset($filePreview)}}" alt="Card image cap">
                     <div class="card-body">
                         <h2 id="previewTitle" class="card-title"> {{ $titlePreview }} </h2>
                         <p id="previewDescription" class="card-text"> {{ $descriptionPreview }} </p>
