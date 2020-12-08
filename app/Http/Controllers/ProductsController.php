@@ -7,6 +7,18 @@ use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
+
+    protected  $data = [
+        'title' => '',
+        'description' => '',
+        'price' => '',
+        'file' => '',
+        'titlePreview' => '',
+        'descriptionPreview' => '',
+        'pricePreview' => '',
+        'filePreview' => '',
+        ];
+
     /**
      * Display a listing of the resource.
      *
@@ -27,35 +39,36 @@ class ProductsController extends Controller
         //
     }
 
+    /**
+     * Show the preview, upload the image in the storage public
+     */
     public function storeOnlyForPreview(Request $request){
-        $data = [
-            'titlePreview' => '',
-            'descriptionPreview' => '',
-            'pricePreview' => '',
-            'filePreview' => '',
-            ];
+       
     
-        //$path = $request->file('file')->getClientOriginalName();
+        //dd($request->file);
         if ($request['title']){
             $data['titlePreview'] = $request->title; 
-            //$data['title'] = $request['title']; 
-           
+            $data['title'] = $request->title; 
         }
         if ($request['description']){
-            $data['descriptionPreview'] = $request->description; 
-            dd($data['descriptionPreview']); 
-            //$data['description'] = $request['description']; 
+            $data['descriptionPreview'] = $request->description;  
+            $data['description'] = $request->description;  
         }
         if ($request['price']){
             $data['pricePreview'] = "$ {$request->price}"; 
+            $data['price'] = $request->price; 
         }
-        if ($path){
+        try{
+            $path = $request->file('file')->getClientOriginalName();
             $data['filePreview'] = "storage/docs/{$path}";  
             //dd($data['pricePreview']);
             $request->file->storeAs('public/docs', $path);
+        } catch(Exception $e){
+            $data['filePreview'] = "storage/docs/{$request->file}";  
+            //dd($data['pricePreview']);
+            $request->file->storeAs('public/docs', $request->file);
         }
         
-    
         return view('/products/addProduct', $data);
     }
 
@@ -68,17 +81,18 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         //
-        $file = Product::class;
+        $file = new Product;
         $file->title = $request->title;
         $file->description = $request->description;
         $file->price = $request->price;
         if ($request->file('file')->isValid()) {
             $path = $request->file('file')->getClientOriginalName();
-            $request->file->storeAs('file', "docs/$path");
-            $file->file = $request->file('file')->getClientOriginalName();
+            $request->file->storeAs('public/docs', $path);
+            $file->file = $path;
         }
         $file->save();
-        
+
+        return redirect('/');
     }
 
     /**

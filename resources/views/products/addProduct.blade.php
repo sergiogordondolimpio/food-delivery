@@ -15,7 +15,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6 card p-4 m-4">
-                <form action="/addProduct" method="POST" enctype="multipart/form-data">
+                <form id="addProductForm" action="/addProduct" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                       <label>Title</label>
@@ -31,15 +31,16 @@
                     </div>
                     <div class="form-group">
                         <label>Select Image</label>
-                        <input name="file" id="image" type="file" class="form-control-file">
+                        <input id="image" type="file" class="form-control-file">
+                        <input type="hidden" name="file" id="file">
                     </div>
-                    <button type="submit" class="btn btn-primary">Add</button>
-                    <a class="btn btn-primary" href="/addProduct">Preview</a>
+                    <button onclick="getNameFilePreview()" type="button" class="btn btn-primary" >Add</button>
+                    <button onclick="submitToPreview()" type="button" class="btn btn-primary">Preview</button>
                 </form>
             </div>
             <div class="col card p-4 m-4">
                 <div class="card" style="width: 25rem;">
-                    <img class="card-img-top" src="{{asset($filePreview)}}" alt="Card image cap">
+                    <img id="previewFile" class="card-img-top" src="{{asset($filePreview)}}" alt="Card image cap">
                     <div class="card-body">
                         <h2 id="previewTitle" class="card-title"> {{ $titlePreview }} </h2>
                         <p id="previewDescription" class="card-text"> {{ $descriptionPreview }} </p>
@@ -53,11 +54,32 @@
 
     @include('/components/footer')
 
-    <script>
-        function preview(){
-            document.getElementById("previewDescription").innerHTML = document.getElementById("description").value
-            document.getElementById("previewPrice").innerHTML = "$ " + document.getElementById("price").value
+    <script language="javascript" type="text/javascript">
+        function getNameFile(){
+            $path = document.getElementById("image").value
+            $elements = $path.split('\\')
+            $fileName = $elements.pop();
+            return $fileName
         }
+        function getNameFilePreview(){
+            $path = document.getElementById("previewFile").getAttribute('src');
+            $elements = $path.split('/')
+            $fileName = $elements.pop()
+            return $fileName
+        }
+        function submitToHome()
+        {
+            document.getElementById("addProductForm").action ="/home";
+            //document.getElementById("addProductForm").method ="get";
+            document.getElementById("file").value = getNameFilePreview();
+            document.getElementById("addProductForm").submit();
+            //document.getElementById("adProductForm").action ="mailerPDF.php";
+        }    
+        function submitToPreview()
+        {
+            document.getElementById("file").value = getNameFilePreview();
+            document.getElementById("addProductForm").submit();
+        }    
     </script>
 </body>
 </html>

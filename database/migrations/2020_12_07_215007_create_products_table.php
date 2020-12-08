@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->timestamps();
             $table->string('title', 100);
             $table->text('description');
-            $table->double('amount', 8, 2);
+            $table->double('price', 8, 2);
             $table->string('file');
         });
     }

@@ -16,21 +16,11 @@ use App\Http\Controllers\ProductsController;
 |
 */
 
-$data = [
-    'title' => 'Card Title',
-    'description' => "Some quick example text to build on the card title and make up the bulk of the card's content.",
-    'price' => '$ 1.10',
-    'file' => '',
-    'titlePreview' => '',
-    'descriptionPreview' => '',
-    'pricePreview' => '',
-    'filePreview' => '',
-    ];
-
 Route::get('/', function () {
     return view('home');
 });
 
+// the first charge website with no previews
 Route::get('/addProduct', function () {
     $data = [
         'titlePreview' => 'Card Title',
@@ -41,47 +31,5 @@ Route::get('/addProduct', function () {
     return view('/products/addProduct', $data);
 });
 
-/*
-Route::post('/addProduct', function () {
-
-    //dd(Request::file('file')->getClientOriginalName());
-    $data = [
-        'titlePreview' => '',
-        'descriptionPreview' => '',
-        'pricePreview' => '',
-        'filePreview' => '',
-        ];
-
-    $request = Request::all();
-    $path = Request::file('file')->getClientOriginalName();
-    if ($request['title']){
-        //Arr::add($data, 'titlePreview', $data['title']);
-        $data['titlePreview'] = $request['title']; 
-        $data['title'] = $request['title']; 
-        //dd($data); 
-    }
-    if ($request['description']){
-        //Arr::add($data, 'titlePreview', $data['title']);
-        $data['descriptionPreview'] = $request['description']; 
-        $data['description'] = $request['description']; 
-        //dd($data); 
-    }
-    if ($request['price']){
-        //Arr::add($data, 'titlePreview', $data['title']);
-        $data['pricePreview'] = "$ {$request['price']}"; 
-        //dd($data); 
-    }
-    if ($request['price']){
-        //Arr::add($data, 'titlePreview', $data['title']);
-        $data['pricePreview'] = "$ {$request['price']}"; 
-        //dd($data); 
-    }
-    
-
-    return view('/products/addProduct', $data);
-    
-});
-*/
-
-//Route::post('home', [ProductsController::class, 'store']);
+Route::post('home', [ProductsController::class, 'store']);
 Route::post('/addProduct', [ProductsController::class, 'storeOnlyForPreview']);
