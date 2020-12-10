@@ -20,7 +20,7 @@
           </a>
           <div class="dropdown-menu text-white" aria-labelledby="navbarDropdownMenuLink">
             <a class="dropdown-item" href="/addProduct">Add</a>
-            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="/listProducts">List</a>
             <a class="dropdown-item" href="#">Something else here</a>
           </div>
         </li>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
 {
@@ -18,6 +19,7 @@ class ProductsController extends Controller
         'pricePreview' => '',
         'filePreview' => '',
         ];
+    
 
     /**
      * Display a listing of the resource.
@@ -28,6 +30,24 @@ class ProductsController extends Controller
     {
         //
     }
+
+    
+    /**
+     * Display a listing of the resource in the listProduct.
+     * In this list it can be edit or delete a card
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function list()
+    {
+        //
+        $products = DB::table('products')->get();
+        //echo $products;
+
+        return view('Products/listProducts', ['products' => $products]);
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -43,30 +63,43 @@ class ProductsController extends Controller
      * Show the preview, upload the image in the storage public
      */
     public function storeOnlyForPreview(Request $request){
-       
-    
-        //dd($request->file);
+        
+        $data = [
+            'title' => '',
+            'description' => '',
+            'price' => '',
+            'file' => '',
+            'titlePreview' => '',
+            'descriptionPreview' => '',
+            'pricePreview' => '',
+            'filePreview' => '',
+            'reload' => 'true'
+            ];
+
+        //dd(nl2br($request->description));
         if ($request['title']){
             $data['titlePreview'] = $request->title; 
             $data['title'] = $request->title; 
         }
         if ($request['description']){
             $data['descriptionPreview'] = $request->description;  
-            $data['description'] = $request->description;  
+            $data['description'] = nl2br($request->description);  
         }
         if ($request['price']){
             $data['pricePreview'] = "$ {$request->price}"; 
             $data['price'] = $request->price; 
         }
-        try{
-            $path = $request->file('file')->getClientOriginalName();
-            $data['filePreview'] = "storage/docs/{$path}";  
-            //dd($data['pricePreview']);
-            $request->file->storeAs('public/docs', $path);
-        } catch(Exception $e){
+       
+        // if there is a image to upload we receive the string
+        // storageImage and we recover the name of the file
+        // and storage it. In the other way only need the path
+        // of the storage
+        if ($request->file == 'storageImage'){
+            $path = $request->file('image')->getClientOriginalName();
+            $data['filePreview'] = "storage/docs/{$path}"; 
+            $request->image->storeAs('public/docs', $path);
+        }else{
             $data['filePreview'] = "storage/docs/{$request->file}";  
-            //dd($data['pricePreview']);
-            $request->file->storeAs('public/docs', $request->file);
         }
         
         return view('/products/addProduct', $data);
@@ -85,9 +118,9 @@ class ProductsController extends Controller
         $file->title = $request->title;
         $file->description = $request->description;
         $file->price = $request->price;
-        if ($request->file('file')->isValid()) {
-            $path = $request->file('file')->getClientOriginalName();
-            $request->file->storeAs('public/docs', $path);
+        if ($request->file('image')->isValid()) {
+            $path = $request->file('image')->getClientOriginalName();
+            $request->image->storeAs('public/docs', $path);
             $file->file = $path;
         }
         $file->save();
