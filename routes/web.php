@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use App\Http\Controllers\ProductsController;
+use App\Models\Product;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +36,5 @@ Route::get('/addProduct', function () {
 Route::post('home', [ProductsController::class, 'store']);
 Route::post('/addProduct', [ProductsController::class, 'storeOnlyForPreview']);
 Route::get('/listProducts', [ProductsController::class, 'list']);
+Route::get('/delete/{id}', [ProductsController::class, 'destroy']);
+Route::get('/update', [ProductsController::class, 'update']);

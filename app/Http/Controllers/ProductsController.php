@@ -8,29 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
 {
-
-    protected  $data = [
-        'title' => '',
-        'description' => '',
-        'price' => '',
-        'file' => '',
-        'titlePreview' => '',
-        'descriptionPreview' => '',
-        'pricePreview' => '',
-        'filePreview' => '',
-        ];
-    
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     
     /**
      * Display a listing of the resource in the listProduct.
@@ -47,17 +24,6 @@ class ProductsController extends Controller
         return view('Products/listProducts', ['products' => $products]);
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Show the preview, upload the image in the storage public
@@ -114,42 +80,32 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         //
+        $validated = $request->validate([
+            'title' => 'required|unique:products|max:100',
+            'description' => 'required',
+            'price' => 'required|numeric'
+        ]);
+
+       
         $file = new Product;
         $file->title = $request->title;
         $file->description = $request->description;
         $file->price = $request->price;
-        if ($request->file('image')->isValid()) {
-            $path = $request->file('image')->getClientOriginalName();
-            $request->image->storeAs('public/docs', $path);
-            $file->file = $path;
+        if ($request->image){
+            if ($request->file('image')->isValid()) {
+                $path = $request->file('image')->getClientOriginalName();
+                $request->image->storeAs('public/docs', $path);
+                $file->file = $path;
+            }
+        }else{
+            $file->file = $request->file;
         }
         $file->save();
 
-        return redirect('/');
+        return redirect('/listProducts');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Product $product)
-    {
-        //
-    }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -168,8 +124,11 @@ class ProductsController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
         //
+        $product = Product::find($id);
+        $product-> delete();
+        return redirect('listProducts');
     }
 }

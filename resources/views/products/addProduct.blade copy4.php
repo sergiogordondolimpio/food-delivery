@@ -13,23 +13,24 @@
                     @csrf
                     <div class="form-group">
                       <label>Title</label>
-                      <input name="title" id="title" type="text" class="form-control" placeholder="Enter title" value="{{ old('title')}}">
+                      <input name="title" id="title" type="text" class="form-control" placeholder="Enter title" value="{{ old('title') }}">
                         @error('title')
                             <div class="alert alert-danger">{{ $message }}</div>
-                            <script>
-                                $(document).ready(function(){
-                                    $("#updateModal").modal();
-                                });
-                            </script>
                         @enderror
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea name="description" id="description" class="form-control" rows="5" placeholder="Enter description...">{{ old('description')}}</textarea>
+                        <textarea name="description" id="description" class="form-control" rows="5" placeholder="Enter description...">{{ old('description') }}</textarea>
+                        @error('description')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label>Price</label>
-                        <input name="price" id="price" type="text" class="form-control" placeholder="Enter price" value="{{ old('price')}}">
+                        <input name="price" id="price" type="text" class="form-control" placeholder="Enter price" value="{{ old('price') }}">
+                        @error('price')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label>Select Image</label>
@@ -38,16 +39,28 @@
                     </div>
                     <button onclick="submitToHome()" type="button" class="btn btn-primary" >Add</button>
                     <button onclick="submitToPreview()" type="button" class="btn btn-primary">Preview</button>
+                    <input type="hidden" name="previewTitle" id="previewTitle">
+                    <input type="hidden" name="previewDescription" id="previewDescription">
+                    <input type="hidden" name="previewPrice" id="previewPrice">
+                    
                 </form>
             </div>
             <div class="col card p-4 m-4">
                 <div class="card" style="width: 25rem;">
                     <img id="previewFile" class="card-img-top" src="{{asset($filePreview)}}" alt="Card image cap">
                     <div class="card-body">
-                        <h2 id="previewTitle" class="card-title"> {{ $titlePreview }} </h2>
-                        <p id="previewDescription" class="card-text"> {!! nl2br(e($descriptionPreview)) !!} </p>
-                        <p id="previewPrice" class="font-weight-bold text-right h4">{{ $pricePreview }}</p>
-                        <a href="#" class="btn btn-primary btn-sm">Add cart</a>
+                        @if ($errors)
+                            <h2 id="previewTitleCard" class="card-title">{{old('previewTitle')}}  </h2>
+                            <p id="previewDescriptionCard" class="card-text"> {{old('previewDescription')}} </p>
+                            <p id="previewPriceCard" class="font-weight-bold text-right h4">$ {{old('previewPrice')}}</p>
+                            <a href="#" class="btn btn-primary btn-sm">Add cart</a>  
+                            @else
+                            
+                            <h2 id="previewTitleCard" class="card-title">{{old('previewTitle')}}  </h2>
+                            <p id="previewDescriptionCard" class="card-text"> {{old('previewDescription')}} </p>
+                            <p id="previewPriceCard" class="font-weight-bold text-right h4">$ {{old('previewPrice')}}</p>
+                            <a href="#" class="btn btn-primary btn-sm">Add cart</a>  
+                        @endif
                     </div>
                 </div>  
             </div>
@@ -55,26 +68,6 @@
     </div>
 
     @include('/components/footer')
-
-    <div class="modal fade" id="updateModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              The title alreade exists. Do you want to update the product?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button onclick="submitToUpdate()" type="button" class="btn btn-primary">Update</button>
-            </div>
-          </div>
-        </div>
-    </div>
 
     <script language="javascript" type="text/javascript">
 
@@ -84,9 +77,14 @@
                 document.getElementById('description').value = {!! json_encode($descriptionPreview) !!}
                 var price = {!! json_encode($pricePreview) !!}.split(" ");
                 document.getElementById('price').value = price[1]
-
+            }else{
+                //document.getElementById('previewTitleCard').innerHTML = 'Card Title'
+                //document.getElementById('previewDescriptionCard').innerHTML = "Some quick example text to build on the card title and make up the bulk of the card's content."
+                //document.getElementById('previewPriceCard').innerHTML = '$ 1.10'
             }
-            //console.log({!! json_encode($titlePreview) !!})
+           
+
+            console.log({!! json_encode($reload) !!})
         }
 
         /* get the name of the file in the form, whithout all 
@@ -119,6 +117,9 @@
             document.getElementById("addProductForm").action ="/home";
             //document.getElementById("addProductForm").method ="get";
             document.getElementById("file").value = getNameFilePreview();
+            document.getElementById("previewTitle").value =  document.getElementById("title").value;
+            document.getElementById("previewDescription").value =  document.getElementById("description").value;
+            document.getElementById("previewPrice").value =  document.getElementById("price").value;
             document.getElementById("addProductForm").submit();
             //document.getElementById("adProductForm").action ="mailerPDF.php";
         }    
@@ -137,13 +138,9 @@
             document.getElementById("addProductForm").submit();
         }    
 
-        function submitToUpdate()
-        {
-            document.getElementById("addProductForm").action ="/update";
-            document.getElementById("file").value = getNameFilePreview();
-            document.getElementById("addProductForm").submit();
-        }  
+        function setVariablesPreview(){
 
+        }
     </script>
 </body>
 </html>
