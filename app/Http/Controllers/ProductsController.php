@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class ProductsController extends Controller
 {
@@ -105,6 +106,29 @@ class ProductsController extends Controller
         return redirect('/listProducts');
     }
 
+    public function toUpdate($id)
+    {
+        $product = new Product;
+        $product = DB::table('products')
+            ->where('id', $id)
+            ->get();
+
+        $data = [
+            'title' => $product[0]->title,
+            'description' => $product[0]->description,
+            'price' => $product[0]->price,
+            'file' => $product[0]->file,
+            'titlePreview' => $product[0]->title,
+            'descriptionPreview' => $product[0]->description,
+            'pricePreview' => "$ {$product[0]->price}",
+            'filePreview' => "storage/docs/{$product[0]->file}",
+            'reload' => 'true'
+            ];
+        
+        return view('/products/addProduct', $data);
+        
+    }
+
     
     /**
      * Update the specified resource in storage.
@@ -113,9 +137,32 @@ class ProductsController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request)
     {
         //
+       
+        if ($request->image){
+            if ($request->file('image')->isValid()) {
+                $path = $request->file('image')->getClientOriginalName();
+                $request->image->storeAs('public/docs', $path);
+                $file = $path;
+            }
+        }else{
+            $file = $request->file;
+        }
+
+        //dd($request);
+        DB::table('products')
+            ->where('title', $request->title)
+            ->update([
+                'title' => $request->title, 
+                'description' => $request->description,
+                'price' => $request->price,
+                'file' => $file,
+                ]
+            );
+
+        return redirect('/listProducts');
     }
 
     /**

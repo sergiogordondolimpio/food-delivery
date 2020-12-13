@@ -37,4 +37,5 @@ Route::post('home', [ProductsController::class, 'store']);
 Route::post('/addProduct', [ProductsController::class, 'storeOnlyForPreview']);
 Route::get('/listProducts', [ProductsController::class, 'list']);
 Route::get('/delete/{id}', [ProductsController::class, 'destroy']);
-Route::get('/update', [ProductsController::class, 'update']);
+Route::get('/edit/{id}', [ProductsController::class, 'toUpdate']);
+Route::post('/update', [ProductsController::class, 'update']);

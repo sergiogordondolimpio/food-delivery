@@ -9,27 +9,35 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6 card p-4 m-4">
-                <form id="addProductForm" action="/addProduct" method="POST" enctype="multipart/form-data">
+                <form id="addProductForm" action="/update" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                       <label>Title</label>
                       <input name="title" id="title" type="text" class="form-control" placeholder="Enter title" value="{{ old('title')}}">
                         @error('title')
                             <div class="alert alert-danger">{{ $message }}</div>
-                            <script>
-                                $(document).ready(function(){
-                                    $("#updateModal").modal();
-                                });
-                            </script>
+                            @if ($message == 'The title has already been taken.')
+                                <script>
+                                    $(document).ready(function(){
+                                        $("#updateModal").modal();
+                                    });
+                                </script>
+                            @endif
                         @enderror
                     </div>
                     <div class="form-group">
                         <label>Description</label>
                         <textarea name="description" id="description" class="form-control" rows="5" placeholder="Enter description...">{{ old('description')}}</textarea>
+                        @error('description')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label>Price</label>
                         <input name="price" id="price" type="text" class="form-control" placeholder="Enter price" value="{{ old('price')}}">
+                        @error('description')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label>Select Image</label>
@@ -38,14 +46,15 @@
                     </div>
                     <button onclick="submitToHome()" type="button" class="btn btn-primary" >Add</button>
                     <button onclick="submitToPreview()" type="button" class="btn btn-primary">Preview</button>
+                    <button  type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
             <div class="col card p-4 m-4">
                 <div class="card" style="width: 25rem;">
                     <img id="previewFile" class="card-img-top" src="{{asset($filePreview)}}" alt="Card image cap">
                     <div class="card-body">
-                        <h2 id="previewTitle" class="card-title"> {{ $titlePreview }} </h2>
-                        <p id="previewDescription" class="card-text"> {!! nl2br(e($descriptionPreview)) !!} </p>
+                        <h2 id="previewTitle" class="card-title">{{ $titlePreview }}</h2>
+                        <p id="previewDescription" class="card-text">{!! nl2br(e($descriptionPreview)) !!}</p>
                         <p id="previewPrice" class="font-weight-bold text-right h4">{{ $pricePreview }}</p>
                         <a href="#" class="btn btn-primary btn-sm">Add cart</a>
                     </div>
@@ -60,17 +69,18 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+              <h4 class="modal-title" id="staticBackdropLabel">Seems the product already exists</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              The title alreade exists. Do you want to update the product?
+              <h5>The title alreade exists. Do you want to update the product?</h5>
             </div>
+
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button onclick="submitToUpdate()" type="button" class="btn btn-primary">Update</button>
+                <label class="text-danger">If you want to update, please Select image again if you want to change it and press the button Update</label>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
@@ -84,7 +94,7 @@
                 document.getElementById('description').value = {!! json_encode($descriptionPreview) !!}
                 var price = {!! json_encode($pricePreview) !!}.split(" ");
                 document.getElementById('price').value = price[1]
-
+                document.getElementById('file').value = getNameFilePreview()
             }
             //console.log({!! json_encode($titlePreview) !!})
         }
@@ -94,8 +104,8 @@
             for example: http://www.web.com/nombre.png
             get: nombre.png
         */
-        function getNameFile(){
-            $path = document.getElementById("image").value
+        function getNameFile($name){
+            $path = document.getElementById($name).value
             $elements = $path.split('\\')
             $fileName = $elements.pop();
             return $fileName
@@ -133,16 +143,11 @@
             }else{
                 document.getElementById("file").value = getNameFilePreview();
             }
-            
+            document.getElementById("addProductForm").action ="/addProduct";
             document.getElementById("addProductForm").submit();
         }    
 
-        function submitToUpdate()
-        {
-            document.getElementById("addProductForm").action ="/update";
-            document.getElementById("file").value = getNameFilePreview();
-            document.getElementById("addProductForm").submit();
-        }  
+   
 
     </script>
 </body>
