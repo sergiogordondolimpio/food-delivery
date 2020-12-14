@@ -30,7 +30,7 @@
         </li>
         <li class="nav-item ml-2" style="align-self: center;">
           <button type="button" class="btn btn-primary btn-sm">
-            Cart <span class="badge badge-light">4</span>
+            Cart <span class="badge badge-light">0</span>
           </button>
         </li>
       </ul>
