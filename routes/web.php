@@ -39,3 +39,12 @@ Route::get('/listProducts', [ProductsController::class, 'list']);
 Route::get('/delete/{id}', [ProductsController::class, 'destroy']);
 Route::get('/edit/{id}', [ProductsController::class, 'toUpdate']);
 Route::post('/update', [ProductsController::class, 'update']);
+
+Route::view('/register', 'auth/registration');
+Route::view('/login', 'auth/login');
+Route::middleware('auth:sanctum')->group(function(){
+    Route::get('/logout', 'App\Http\Controller\ClientController@logout')->name('logout.api');
+    Route::get('/client', 'App\Http\Controller\ClientController@clientData')->name('client.api');
+});
+Route::post('/registered', 'App\Http\Controller\Auth\RegisterController@register')->name('register.api');
+Route::post('/logged', 'App\Http\Controller\Auth\RegisterController@login')->name('login.api');
