@@ -5,6 +5,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use App\Http\Controllers\ProductsController;
 use App\Models\Product;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,8 +44,8 @@ Route::post('/update', [ProductsController::class, 'update']);
 Route::view('/register', 'auth/registration');
 Route::view('/login', 'auth/login');
 Route::middleware('auth:sanctum')->group(function(){
-    Route::get('/logout', 'App\Http\Controller\ClientController@logout')->name('logout.api');
-    Route::get('/client', 'App\Http\Controller\ClientController@clientData')->name('client.api');
+    Route::get('/logout', 'App\Http\Controllers\ClientController@logout')->name('logout.api');
+    Route::get('/client', 'App\Http\Controllers\ClientController@clientData')->name('client.api');
 });
-Route::post('/registered', 'App\Http\Controller\Auth\RegisterController@register')->name('register.api');
-Route::post('/logged', 'App\Http\Controller\Auth\RegisterController@login')->name('login.api');
+Route::post('/registered', 'App\Http\Controllers\Auth\RegisterController@register')->name('register.api');
+Route::post('/logged', 'App\Http\Controllers\Auth\LoginController@login')->name('login.api');

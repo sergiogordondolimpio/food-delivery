@@ -9,7 +9,7 @@
     <div class="row justify-content-md-center mt-5 ">
         <div class="card p-4" style="width: 25rem">
 
-            <form id="addProductForm" action="/register" method="POST" enctype="multipart/form-data">
+            <form id="addProductForm" action="/logged" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                   <label>E-mail</label>
@@ -20,7 +20,7 @@
                 </div>
                 <div class="form-group">
                   <label>Password</label>
-                  <input name="password" id="password" type="text" class="form-control" placeholder="Enter password" value="{{ old('password')}}">
+                  <input name="password" id="password" type="password" class="form-control" placeholder="Enter password" value="{{ old('password')}}">
                     @error('password')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror

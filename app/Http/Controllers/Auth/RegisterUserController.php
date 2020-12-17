@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use App\Models\Client;
+use App\Models\User;
 
 class RegisterController extends Controller
 {
@@ -23,7 +23,7 @@ class RegisterController extends Controller
             ]);*/
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|max:255|unique:clients',
+                'email' => 'required|string|max:255|unique:users',
                 'password' => 'required|string|min:8|confirmed',
                 'telephone' => 'required|numeric|digits_between:8,12',
             ]);
@@ -36,19 +36,13 @@ class RegisterController extends Controller
 
             $request['password'] = Hash::make($request['password']);
             $request['remember_token'] = Str::random(10);
-            $client = Client::create($request->toArray());
+            $user = User::create($request->toArray());
+            //dd($user);
             
-            /*return response()->json([
+            return response()->json([
                 'status_code' => 200,
                 'message' =>'Registration Successfull',
-            ]);*/
-
-            return view('auth/succesfull-registration', 
-                [
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'telephone' => $request->telephone
-                ]);
+            ]);
 
         }catch(Exception $error){
 

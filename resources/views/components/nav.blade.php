@@ -21,14 +21,19 @@
       </ul>
     </div>
     <div class="collapse navbar-collapse mr-5" id="navbarNavDropdown" style="justify-content: flex-end;">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav" style="align-items: center;">
         <li class="nav-item">
-          <a class="nav-link text-white" href="/login">Login <span class="sr-only">(current)</span></a>
+          @if (Auth::check())
+          <span class="badge badge-light">{{ Auth::user()->name }}</span>
+          @else
+          <a class="nav-link text-white" href="/login">Login <span class="sr-only">(current)</span></a>    
+          @endif
+         
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">Logout</a>
+          <a class="nav-link text-white" href="/logout">Logout</a>
         </li>
-        <li class="nav-item ml-2" style="align-self: center;">
+        <li class="nav-item ml-2">
           <button type="button" class="btn btn-primary btn-sm">
             Cart <span class="badge badge-light">0</span>
           </button>

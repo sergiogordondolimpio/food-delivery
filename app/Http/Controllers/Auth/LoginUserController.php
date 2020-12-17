@@ -28,25 +28,23 @@ class LoginController extends Controller
                     'message' =>'Unauthorized',
                     ]);
                 }
-                
+                dd($credentials);
                 
             $client = Client::where('email', $request->email)->first();
-            
+
             if(!Hash::check($request->password, $client->password, [])){
                 return response()->json([
                     'status_code' => 422,
                     'message' =>' Password does not Match',
-                    ]);
-                }
-                
-            $tokenResult = $client->createToken('AuthToken')->plainTextToken;
+                ]);
+            }
 
-            return view('home');
-            /*return response()->json([
+            $tokenResult = $client->createToken('AuthToken')->plainTextToken;
+            return response()->json([
                 'status_code' => 200,
                 'acces_token' => $tokenResult,
                 'token_type' => 'Bearer',
-            ]);*/
+            ]);
 
         }catch (Exception $error){
 

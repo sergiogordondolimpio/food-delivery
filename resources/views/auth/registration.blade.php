@@ -6,8 +6,8 @@
 
     @include('/components/nav')
 
-    <div class="row justify-content-md-center mt-5 ">
-        <div class="card p-4" style="width: 25rem">
+    <div class="row justify-content-md-center mt-5 bg-light">
+        <div class="card p-4 shadow" style="width: 25rem">
             
                 <form id="registrationForm" action="/registered" method="POST">
                     @csrf
@@ -27,8 +27,15 @@
                     </div>
                     <div class="form-group">
                       <label>Password*</label>
-                      <input name="password" id="password" type="text" class="form-control" placeholder="Enter password" value="{{ old('password')}}">
+                      <input name="password" type="password" class="form-control" placeholder="Enter password">
                         @error('password')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                      <label>Password confirmation*</label>
+                      <input name="password_confirmation" type="password" class="form-control" placeholder="Enter password confirmation">
+                        @error('password_confirmation')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
