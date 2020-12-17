@@ -39,7 +39,7 @@ class LoginController extends Controller
                     ]);
                 }
                 
-            $tokenResult = $client->createToken('AuthToken')->plainTextToken;
+            $tokenResult = $client->createToken('authToken')->plainTextToken;
 
             return view('home');
             /*return response()->json([

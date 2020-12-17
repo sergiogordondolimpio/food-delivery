@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\User;
 
-class RegisterController extends Controller
+class RegisterUserController extends Controller
 {
     //
     public function register(Request $request){

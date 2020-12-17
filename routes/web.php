@@ -41,11 +41,6 @@ Route::get('/delete/{id}', [ProductsController::class, 'destroy']);
 Route::get('/edit/{id}', [ProductsController::class, 'toUpdate']);
 Route::post('/update', [ProductsController::class, 'update']);
 
-Route::view('/register', 'auth/registration');
-Route::view('/login', 'auth/login');
-Route::middleware('auth:sanctum')->group(function(){
-    Route::get('/logout', 'App\Http\Controllers\ClientController@logout')->name('logout.api');
-    Route::get('/client', 'App\Http\Controllers\ClientController@clientData')->name('client.api');
-});
-Route::post('/registered', 'App\Http\Controllers\Auth\RegisterController@register')->name('register.api');
-Route::post('/logged', 'App\Http\Controllers\Auth\LoginController@login')->name('login.api');
+Route::view('/register', '/auth/registration');
+Route::view('/login', '/auth/login');
+

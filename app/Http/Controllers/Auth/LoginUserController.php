@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ValidationException;
-use App\Models\Client;
+use App\Models\User;
 
-class LoginController extends Controller
+class LoginUserController extends Controller
 {
     //
     public function login(Request $request){
@@ -28,18 +28,17 @@ class LoginController extends Controller
                     'message' =>'Unauthorized',
                     ]);
                 }
-                dd($credentials);
                 
-            $client = Client::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->first();
 
-            if(!Hash::check($request->password, $client->password, [])){
+            if(!Hash::check($request->password, $user->password, [])){
                 return response()->json([
                     'status_code' => 422,
                     'message' =>' Password does not Match',
                 ]);
             }
 
-            $tokenResult = $client->createToken('AuthToken')->plainTextToken;
+            $tokenResult = $user->createToken('authToken')->plainTextToken;
             return response()->json([
                 'status_code' => 200,
                 'acces_token' => $tokenResult,

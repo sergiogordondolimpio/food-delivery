@@ -24,14 +24,14 @@
       <ul class="navbar-nav" style="align-items: center;">
         <li class="nav-item">
           @if (Auth::check())
-          <span class="badge badge-light">{{ Auth::user()->name }}</span>
+          <span class="badge badge-light">{{ Auth::client()->name }}</span>
           @else
           <a class="nav-link text-white" href="/login">Login <span class="sr-only">(current)</span></a>    
           @endif
          
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/logout">Logout</a>
+          <a class="nav-link text-white" href="/api/logout">Logout</a>
         </li>
         <li class="nav-item ml-2">
           <button type="button" class="btn btn-primary btn-sm">
