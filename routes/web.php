@@ -39,3 +39,5 @@ Route::get('/listProducts', [ProductsController::class, 'list']);
 Route::get('/delete/{id}', [ProductsController::class, 'destroy']);
 Route::get('/edit/{id}', [ProductsController::class, 'toUpdate']);
 Route::post('/update', [ProductsController::class, 'update']);
+
+Route::view('/add', 'products/addProductApi');

@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
+use Validator;
 
 class ProductsController extends Controller
 {
@@ -25,6 +26,65 @@ class ProductsController extends Controller
         return view('Products/listProducts', ['products' => $products]);
     }
 
+    // list to use in an api
+    public function listApi()
+    {
+        return Product::all();
+    }
+
+    // add in database with api
+    public function add(Request $request)
+    {
+        $product = new Product;
+        $product->title = $request->title;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->file = $request->file;
+        $result = $product->save();
+        if ($result){
+            return ["Result" => "Data has been saved"];
+        }else{
+            return ["Result" => "Operation failed"];
+        }
+    }
+
+    // delete in database with api
+    public function delete($id)
+    {
+        $product = Product::find($id);
+        $result = $product->delete();
+        if ($result){
+            return ["Result" => "Data has been deleted"];
+        }else{
+            return ["Result" => "Operation failed"];
+        }
+    }
+
+    // search in database with api
+    public function search($title)
+    {
+        return Product::where("title", $title)->get();
+        
+    }
+
+    // save with validations using api
+    public function testData(Request $request)
+    {
+        $rules = array(
+            "title" => "required"
+        );
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return $validator->errors();
+        }else{
+            $product = new Product;
+            $product->title = $request->title;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->file = $request->file;
+            $result = $product->save();
+        }
+    }
 
     /**
      * Show the preview, upload the image in the storage public
