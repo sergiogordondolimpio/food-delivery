@@ -6,9 +6,27 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Auth;
 
 class UsersController extends Controller
 {
+
+    public function userData(Request $request){
+        return $request->user();
+    }
+
+    public function logout(){
+        Auth::user()->token()->delete();
+
+        /*Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');*/
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,6 +40,7 @@ class UsersController extends Controller
             'device_name' => 'required',
         ]);*/
         
+
         $user = User::where('email', $request->email)->first();
         
         
@@ -31,16 +50,16 @@ class UsersController extends Controller
                 ]);
             }
             
-            $token = $user->createToken('my-app-token')->plainTextToken;
+        $token = $user->createToken('my-app-token')->plainTextToken;
             
         $response = [
             'user' => $user,
             'token' => $token
         ];
 
-        if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
+        /*if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
             // The user is being remembered...
-        }
+        }*/
 
         //return redirect('/');
         return $response;

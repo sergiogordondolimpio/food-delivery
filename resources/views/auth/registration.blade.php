@@ -9,7 +9,7 @@
     <div class="row justify-content-md-center mt-5 bg-light">
         <div class="card p-4 shadow" style="width: 25rem">
             
-                <form id="registrationForm" action="/registered" method="POST">
+                <form id="registrationForm" action="/api/register" method="POST">
                     @csrf
                     <div class="form-group">
                       <label>Name*</label>

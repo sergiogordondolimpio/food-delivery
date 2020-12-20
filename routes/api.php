@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FirstApi;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +39,11 @@ Route::post('save', [ProductsController::class, 'testData']);
 // sanctum. So that need the token generated in login
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('list', [ProductsController::class, 'listApi']);
-    
+    Route::get('logout', [UsersController::class, 'logout']);
+    Route::get('user', [UsersController::class, 'user']);
 });
 
 // this login generate the token
-Route::post('login', [UsersController::class, 'index']);
+//Route::post('login', [UsersController::class, 'index']);
+Route::post('register', [RegisterController::class, 'register']);
+Route::post('login', [LoginController::class, 'login']);

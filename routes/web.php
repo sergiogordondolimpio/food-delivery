@@ -46,3 +46,4 @@ Route::view('/add', 'products/addProductApi');
 
 // routes of views of the login and register
 route::view('login', 'auth/login');
+route::view('register', 'auth/registration');

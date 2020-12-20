@@ -9,7 +9,7 @@
     <div class="row justify-content-md-center mt-5 ">
         <div class="card p-4 shadow" style="width: 25rem">
 
-            <form id="addProductForm" action="/api/login" method="POST" enctype="multipart/form-data">
+            <form id="addProductForm" action="/api/login" method="POST">
                 @csrf
                 <div class="form-group">
                   <label>E-mail</label>
