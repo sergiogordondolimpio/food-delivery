@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FirstApi;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,9 +23,22 @@ use App\Http\Controllers\ProductsController;
 
 // if 404 run:  php artisan optimize 
 Route::get('data', [FirstApi::class, 'getData']);
-Route::get('list', [ProductsController::class, 'listApi']);
 Route::post('add', [ProductsController::class, 'add']);
 Route::delete('delete/{id}', [ProductsController::class, 'delete']);
 Route::get('search/{title}', [ProductsController::class, 'search']);
 Route::post('save', [ProductsController::class, 'testData']);
 
+
+/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});*/
+
+// Here ist the group of routes that need the authentification with
+// sanctum. So that need the token generated in login
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::get('list', [ProductsController::class, 'listApi']);
+    
+});
+
+// this login generate the token
+Route::post('login', [UsersController::class, 'index']);
