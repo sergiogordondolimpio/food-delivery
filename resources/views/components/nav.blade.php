@@ -23,10 +23,14 @@
     <div class="collapse navbar-collapse mr-5" id="navbarNavDropdown" style="justify-content: flex-end;">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-white" href="/">Login <span class="sr-only">(current)</span></a>
+          @if (Auth::check())
+            <span class="badge badge-light">{{ Auth::user()->name }}</span>
+          @else
+            <a class="nav-link text-white" href="/login">Login <span class="sr-only">(current)</span></a>
+          @endif
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">Logout</a>
+          <a class="nav-link text-white" href="/logout">Logout</a>
         </li>
         <li class="nav-item ml-2" style="align-self: center;">
           <button type="button" class="btn btn-primary btn-sm">

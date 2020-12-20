@@ -38,7 +38,12 @@ class UsersController extends Controller
             'token' => $token
         ];
 
-        return redirect('/');
+        if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
+            // The user is being remembered...
+        }
+
+        //return redirect('/');
+        return $response;
     }
 
     /**

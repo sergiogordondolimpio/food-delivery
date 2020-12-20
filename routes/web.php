@@ -33,6 +33,8 @@ Route::get('/addProduct', function () {
     return view('/products/addProduct', $data);
 });
 
+
+// routes to the products
 Route::post('home', [ProductsController::class, 'store']);
 Route::post('/addProduct', [ProductsController::class, 'storeOnlyForPreview']);
 Route::get('/listProducts', [ProductsController::class, 'list']);
@@ -41,3 +43,6 @@ Route::get('/edit/{id}', [ProductsController::class, 'toUpdate']);
 Route::post('/update', [ProductsController::class, 'update']);
 
 Route::view('/add', 'products/addProductApi');
+
+// routes of views of the login and register
+route::view('login', 'auth/login');
