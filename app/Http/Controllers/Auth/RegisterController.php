@@ -31,6 +31,7 @@ class RegisterController extends Controller
             
             $request['password'] = Hash::make($request['password']);
             $request['remember_token'] = Str::random(10);
+            // save in the database
             $user = User::create($request->toArray());
             return $user;
             

@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\User;
 
+// the controller is namespaced unless specifically import the Auth namespace, 
+// PHP will assume it's under the namespace of the class, 
+// To fix this, add use Auth; at the top of Controller 
+use Auth;
+
 class LoginController extends Controller
 {
     //
@@ -22,17 +27,20 @@ class LoginController extends Controller
             ]);
 
             $credentials = request(['email', 'password']);
-
+            
             // add the remember, in the video is not there
-            if(!Auth::attempt($credentials, $remember)){
+            if(!Auth::attempt($credentials)){
                 return response()->json([
                     'status_code' => 422,
                     'message' => 'Unauthorized',
-                ]);
-            }
-
+                    ]);
+                }
+                
+                
             $user = User::where('email', $request->email)->first();
-
+            $tokenResult = $user->createToken('authToken')->plainTextToken;
+                
+                
             if(!Hash::check($request->password, $user->password)){
                 return response()->json([
                     'status_code' => 422,
@@ -40,7 +48,12 @@ class LoginController extends Controller
                 ]);
             }
 
-            $tokenResult = $user->createToken('authToken')->plaintTextToken;
+            
+            //dd(Auth::check());
+            //dd(Auth::user());
+
+            //return redirect('/');
+
             return response()->json([
                 'status_code' => 200,
                 'access_token' => $tokenResult,

@@ -15,12 +15,19 @@ class UsersController extends Controller
         return $request->user();
     }
 
-    public function logout(){
-        Auth::user()->token()->delete();
+    public function logout(Request $request){
 
-        /*Auth::logout();
+        $request->user()->currentAccessToken()->delete();
 
-        $request->session()->invalidate();
+        return response()->json([
+            'status_code' => 200,
+            'message' => 'Token deleted'
+        ]);
+        //Auth::user()->token()->delete();
+
+        //Auth::logout();
+
+        /*$request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
