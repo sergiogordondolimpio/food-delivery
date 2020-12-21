@@ -1,21 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-    @include('/components/head')
+@include('components/head')
+
+@include('components/nav')
+
+@include('components/banner')
+
 <body>
-
-    @include('/components/nav')
-    @include('/components/banner')
-    
     <div class="container">
-        <div class="d-flex justify-content-center">
-            <div class="row justify-content-center">
-                @for ($j = 0; $j < 12; $j++)
-                    @include('products/cardExample')
-                @endfor
-            </div>
-        </div>
+        row
     </div>
-
-    @include('/components/footer')
 </body>
-</html>
+
+@for ($i = 0; $i < 12; $i++)
+    @include('products/cardExamples')
+@endfor
+
+@include('components/footer')
+

@@ -17,7 +17,10 @@ use App\Models\Product;
 |
 */
 
-Route::get('/', function () {
+//Auth::routes();
+
+
+Route::get('/index', function () {
     return view('home');
 });
 
@@ -46,4 +49,6 @@ Route::view('/add', 'products/addProductApi');
 
 // routes of views of the login and register
 route::view('login', 'auth/login');
-route::view('register', 'auth/registration');
+route::view('register', 'auth/registrer');
+
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
