@@ -1,7 +1,9 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+    @include('/components/head')
+<body>
 
-@section('content')
-
+    @include('/components/nav')
     @include('/components/banner')
     
     <div class="container">
@@ -14,4 +16,6 @@
         </div>
     </div>
 
-@endsection
+    @include('/components/footer')
+</body>
+</html>

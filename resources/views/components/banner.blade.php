@@ -1,5 +1,6 @@
 
-<div class="d-flex banner ">
+<div class="d-flex" style="background-image: url('{{ asset('storage/docs/banner.jpg')}}');  background-size: cover; 
+height:400px;">
     <div class="container text-white">
         <div class="row my-5 flex-row-reverse">
             <h3 class="font-weight-bold">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</h3> 
@@ -17,11 +18,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    .banner{
-        background-image: url('storage/docs/banner.jpg');
-        background-size: cover; 
-        height:400px;
-    }
-</style>

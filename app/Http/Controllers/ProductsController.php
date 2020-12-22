@@ -10,6 +10,22 @@ use Validator;
 
 class ProductsController extends Controller
 {
+
+    public function index(Request $request){
+
+        switch($request->submitButton){
+            case 'add':
+                dd($request->submitButton);
+            break;
+            case 'preview':
+                dd($request->submitButton);
+            break;
+            case 'update':
+                dd($request->submitButton);
+            break;
+        }
+
+    }
     
     /**
      * Display a listing of the resource in the listProduct.
@@ -128,7 +144,7 @@ class ProductsController extends Controller
         }else{
             $data['filePreview'] = "storage/docs/{$request->file}";  
         }
-        
+
         return view('/products/addProduct', $data);
     }
 
@@ -141,6 +157,7 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         //
+
         $validated = $request->validate([
             'title' => 'required|unique:products|max:100',
             'description' => 'required',
