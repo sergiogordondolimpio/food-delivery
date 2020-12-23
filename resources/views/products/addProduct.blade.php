@@ -9,11 +9,12 @@
                 @csrf
                 <div class="form-group">
                 <label>Title</label>
-                <input name="title" id="title" type="text" class="form-control" placeholder="Enter title" value="{{ old('title')}}">
+                <input name="title" id="title" type="text" class="form-control" placeholder="Enter title" value="{{$title}}">
                     @error('title')
                         <div class="alert alert-danger">{{ $message }}</div>
                         @if ($message == 'The title has already been taken.')
                             <script>
+                                document.getElementById("title").value = "Johnny Bravo";
                                alert("The title has already been taken.\n
                                     If you want to udate\n
                                     Please click Update button");
@@ -39,10 +40,10 @@
                     <label>Select Image</label>
                     <input id="image" name="image" type="file" class="form-control-file">
                 </div>
-                <input type="hidden" name="imagePreview" value="{{asset($filePreview)}}">
-                <input type="hidden" name="titlePreview" value="{{asset($titlePreview)}}">
-                <input type="hidden" name="descriptionPreview" value="{{asset($descriptionPreview)}}">
-                <input type="hidden" name="pricePreview" value="{{asset($pricePreview)}}">
+                <input type="hidden" name="imagePreview" value="{{$filePreview}}">
+                <input type="hidden" name="titlePreview" value="{{$titlePreview}}">
+                <input type="hidden" name="descriptionPreview" value="{{$descriptionPreview}}">
+                <input type="hidden" name="pricePreview" value="{{$pricePreview}}">
 
                 <button type="submit" type="button" class="btn btn-primary" value="add" name="submitButton">Add</button>
                 <button type="submit" type="button" class="btn btn-primary" value="preview" name="submitButton">Preview</button>

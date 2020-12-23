@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function(){
     // the first charge website with no previews
     Route::get('/addProduct', function () {
         $data = [
+            'title' => '',
             'titlePreview' => 'Card Title',
             'descriptionPreview' => "Some quick example text to build on the card title and make up the bulk of the card's content.",
             'pricePreview' => '$ 1.10',

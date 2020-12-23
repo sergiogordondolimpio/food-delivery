@@ -11,14 +11,40 @@ use Validator;
 class ProductsController extends Controller
 {
 
+
+
     public function index(Request $request){
 
+        
+        /*$validator = Validator::make($request->all(), [
+            'title' => 'required|unique:products|max:100',
+            'description' => 'required',
+            'price' => 'required|numeric'
+        ]);
+
+        $data = $this->preview($request);
+        if ($validator->fails()) {
+            /*return redirect('/addProduct')
+                        ->withErrors($validator)
+                        ->withInput($data);
+                        //return redirect()->back()->with([$data]);
+        }*/
+
+        
+      
+        //dd($request->file('image'));
         switch($request->submitButton){
             case 'add':
-                dd($request->submitButton);
+        //dd($data);
+        $validated = $request->validate([
+            'title' => 'required|unique:products|max:100',
+            'description' => 'required',
+            'price' => 'required|numeric'
+        ]);
             break;
             case 'preview':
-                dd($request->submitButton);
+                $data = $this->preview($request);
+                return view('/products/addProduct', $data);
             break;
             case 'update':
                 dd($request->submitButton);
@@ -26,6 +52,29 @@ class ProductsController extends Controller
         }
 
     }
+
+
+    public function preview($request){
+        
+        if ($request->title){
+            $data = ['titlePreview' => $request->title];
+            $data = ['titlePreview' => $request->title];
+    }
+        else
+            $data = ['titlePreview' => $request->titlePreview];
+        
+        $data += ['descriptionPreview' => "Some quick example text to build on the card title and make up the bulk of the card's content."];
+        
+        $data += ['pricePreview' => '$ 1.10'];
+
+        $data += ['filePreview' => 'storage/docs/food-image1.PNG'];
+            
+        
+        //dd($data);
+
+        return $data;
+    }
+
     
     /**
      * Display a listing of the resource in the listProduct.
