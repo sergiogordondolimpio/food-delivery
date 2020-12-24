@@ -12,65 +12,189 @@ class ProductsController extends Controller
 {
 
 
+    /**
+     *  the first charge website with no previews
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function show(){
+        $data = [
+            'title' => '',
+            'description' => '',
+            'price' => '',
+            'titlePreview' => 'Card Title',
+            'descriptionPreview' => "Some quick example text to build on the card title and make up the bulk of the card's content.",
+            'pricePreview' => '$ 1.10',
+            'imagePreview' => 'storage/docs/food-image1.PNG',
+            'reload' => ''
+            ];
+        
+        return view('/products/addProduct', $data);
+    }
 
+    /**
+     * Depend of the button clicked in the form is the response,
+     * selected with a switch case
+     * - store product
+     * - show preview form
+     * - update product
+     *
+     * @param Illuminate\Http\Request
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request){
 
-        
-        /*$validator = Validator::make($request->all(), [
-            'title' => 'required|unique:products|max:100',
-            'description' => 'required',
-            'price' => 'required|numeric'
-        ]);
-
-        $data = $this->preview($request);
-        if ($validator->fails()) {
-            /*return redirect('/addProduct')
-                        ->withErrors($validator)
-                        ->withInput($data);
-                        //return redirect()->back()->with([$data]);
-        }*/
-
-        
-      
-        //dd($request->file('image'));
+        // depend of the button is the case
         switch($request->submitButton){
+
+            // add element to the database
             case 'add':
-        //dd($data);
-        $validated = $request->validate([
-            'title' => 'required|unique:products|max:100',
-            'description' => 'required',
-            'price' => 'required|numeric'
-        ]);
+                $validator = Validator::make($request->all(), [
+                    'title' => 'required|unique:products|max:100',
+                    'description' => 'required',
+                    'price' => 'required|numeric'
+                ],[
+                    'unique' => 'The :attribute has already been taken. Please click UPDATE if you want to update it'
+                ]
+                );
+
+                $data = $this->preview($request);
+                if ($validator->fails()) {
+                    return view('/products/addProduct', $data)
+                                ->withErrors($validator);
+                    }
+                
+                $this->store($data);
+                return redirect('/listProducts');
             break;
+
+            // only return the preview
             case 'preview':
                 $data = $this->preview($request);
                 return view('/products/addProduct', $data);
             break;
+
+            // update to the database
             case 'update':
-                dd($request->submitButton);
+                $validator = Validator::make($request->all(), [
+                    'title' => 'required|max:100',
+                    'description' => 'required',
+                    'price' => 'required|numeric'
+                    ]);
+                    
+                $data = $this->preview($request);
+                if ($validator->fails()) {
+                    return view('/products/addProduct', $data)
+                    ->withErrors($validator);
+                }
+                    
+                $this->update($data);
+                return redirect('/listProducts');
             break;
         }
 
     }
 
+    
+    /**
+     * Show the product in the view addProduct.
+     * 
+     * @param String $id
+     * @return \Illuminate\Http\Response
+     */
+    public function toUpdate($id)
+    {
+        $product = new Product;
+        $product = DB::table('products')
+            ->where('id', $id)
+            ->get();
 
-    public function preview($request){
+        $data = [
+            'title' => $product[0]->title,
+            'description' => $product[0]->description,
+            'price' => $product[0]->price,
+            'file' => $product[0]->file,
+            'titlePreview' => $product[0]->title,
+            'descriptionPreview' => $product[0]->description,
+            'pricePreview' => "$ {$product[0]->price}",
+            'imagePreview' => "storage/docs/{$product[0]->file}",
+            'reload' => 'true'
+            ];
         
-        if ($request->title){
-            $data = ['titlePreview' => $request->title];
-            $data = ['titlePreview' => $request->title];
+        return view('/products/addProduct', $data);
+        
     }
-        else
-            $data = ['titlePreview' => $request->titlePreview];
-        
-        $data += ['descriptionPreview' => "Some quick example text to build on the card title and make up the bulk of the card's content."];
-        
-        $data += ['pricePreview' => '$ 1.10'];
 
-        $data += ['filePreview' => 'storage/docs/food-image1.PNG'];
-            
+
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param  Array  $request
+     */
+    public function update($request)
+    {
+        //dd($request);
+        DB::table('products')
+            ->where('title', $request['title'])
+            ->update([
+                'title' => $request['title'], 
+                'description' => $request['description'],
+                'price' => $request['price'],
+                'file' => substr($request['imagePreview'], strrpos($request['imagePreview'], '/') + 1),
+                ]
+            );
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  $data
+     */
+    public function store($data)
+    {
+        $product = new Product;
+        $product->title = $data['title'];
+        $product->description = $data['description'];
+        $product->price = $data['price']; 
+        $product->file = substr($data['imagePreview'], strrpos($data['imagePreview'], '/') + 1);
+        $product->save();
+    }
+
+
+    /**
+     * Take the request and change the values depend of the input
+     * to return an array with the new values to save or show in
+     * the preview model and store the image, if there is, in the
+     * storage
+     * 
+     * @param Object $request
+     * @return Array $data
+     */
+    public function preview($request){
+
+        $data = [];
         
-        //dd($data);
+        // the variable to the preview card in addProduct.blade is
+        // update depend if the input of the form has something. 
+        // If the input has something update the variable preview
+        // for this, in other case, keep the same value
+        ($request->title)?$data += ['titlePreview' => $request->title]:$data += ['titlePreview' => $request->titlePreview];
+        ($request->description)?$data += ['descriptionPreview' => $request->description]:$data += ['descriptionPreview' => $request->descriptionPreview];
+        ($request->price)?$data += ['pricePreview' => $request->price]:$data += ['pricePreview' => $request->pricePreview];
+        
+        // if the input file has some file, that file is storaged
+        // and update the path
+        if ($request->file('image')){
+            $path = $request->file('image')->getClientOriginalName();
+            $data += ['imagePreview' => "storage/docs/{$path}"]; 
+            $request->image->storeAs('public/docs', $path);
+        }else{
+            $data += ['imagePreview' => $request->imagePreview];  
+        }
+       
+        $data += ['title' => $request->title];
+        $data += ['description' => $request->description];
+        $data += ['price' => $request->price];
 
         return $data;
     }
@@ -91,210 +215,19 @@ class ProductsController extends Controller
         return view('Products/listProducts', ['products' => $products]);
     }
 
-    // list to use in an api
-    public function listApi()
-    {
-        return Product::all();
-    }
 
-    // add in database with api
-    public function add(Request $request)
-    {
-        $product = new Product;
-        $product->title = $request->title;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->file = $request->file;
-        $result = $product->save();
-        if ($result){
-            return ["Result" => "Data has been saved"];
-        }else{
-            return ["Result" => "Operation failed"];
-        }
-    }
-
-    // delete in database with api
-    public function delete($id)
-    {
-        $product = Product::find($id);
-        $result = $product->delete();
-        if ($result){
-            return ["Result" => "Data has been deleted"];
-        }else{
-            return ["Result" => "Operation failed"];
-        }
-    }
-
-    // search in database with api
+    // search in database fot title
     public function search($title)
     {
         return Product::where("title", $title)->get();
         
     }
 
-    // save with validations using api
-    public function testData(Request $request)
-    {
-        $rules = array(
-            "title" => "required"
-        );
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
-            return $validator->errors();
-        }else{
-            $product = new Product;
-            $product->title = $request->title;
-            $product->description = $request->description;
-            $product->price = $request->price;
-            $product->file = $request->file;
-            $result = $product->save();
-        }
-    }
-
-    /**
-     * Show the preview, upload the image in the storage public
-     */
-    public function storeOnlyForPreview(Request $request){
-        
-        $data = [
-            'title' => '',
-            'description' => '',
-            'price' => '',
-            'file' => '',
-            'titlePreview' => '',
-            'descriptionPreview' => '',
-            'pricePreview' => '',
-            'filePreview' => '',
-            'reload' => 'true'
-            ];
-
-        //dd(nl2br($request->description));
-        if ($request['title']){
-            $data['titlePreview'] = $request->title; 
-            $data['title'] = $request->title; 
-        }
-        if ($request['description']){
-            $data['descriptionPreview'] = $request->description;  
-            $data['description'] = nl2br($request->description);  
-        }
-        if ($request['price']){
-            $data['pricePreview'] = "$ {$request->price}"; 
-            $data['price'] = $request->price; 
-        }
-       
-        // if there is a image to upload we receive the string
-        // storageImage and we recover the name of the file
-        // and storage it. In the other way only need the path
-        // of the storage
-        if ($request->file == 'storageImage'){
-            $path = $request->file('image')->getClientOriginalName();
-            $data['filePreview'] = "storage/docs/{$path}"; 
-            $request->image->storeAs('public/docs', $path);
-        }else{
-            $data['filePreview'] = "storage/docs/{$request->file}";  
-        }
-
-        return view('/products/addProduct', $data);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-
-        $validated = $request->validate([
-            'title' => 'required|unique:products|max:100',
-            'description' => 'required',
-            'price' => 'required|numeric'
-        ]);
-
-       
-        $file = new Product;
-        $file->title = $request->title;
-        $file->description = $request->description;
-        $file->price = $request->price;
-        if ($request->image){
-            if ($request->file('image')->isValid()) {
-                $path = $request->file('image')->getClientOriginalName();
-                $request->image->storeAs('public/docs', $path);
-                $file->file = $path;
-            }
-        }else{
-            $file->file = $request->file;
-        }
-        $file->save();
-
-        return redirect('/listProducts');
-    }
-
-    public function toUpdate($id)
-    {
-        $product = new Product;
-        $product = DB::table('products')
-            ->where('id', $id)
-            ->get();
-
-        $data = [
-            'title' => $product[0]->title,
-            'description' => $product[0]->description,
-            'price' => $product[0]->price,
-            'file' => $product[0]->file,
-            'titlePreview' => $product[0]->title,
-            'descriptionPreview' => $product[0]->description,
-            'pricePreview' => "$ {$product[0]->price}",
-            'filePreview' => "storage/docs/{$product[0]->file}",
-            'reload' => 'true'
-            ];
-        
-        return view('/products/addProduct', $data);
-        
-    }
-
-    
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        //
-       
-        if ($request->image){
-            if ($request->file('image')->isValid()) {
-                $path = $request->file('image')->getClientOriginalName();
-                $request->image->storeAs('public/docs', $path);
-                $file = $path;
-            }
-        }else{
-            $file = $request->file;
-        }
-
-        //dd($request);
-        DB::table('products')
-            ->where('title', $request->title)
-            ->update([
-                'title' => $request->title, 
-                'description' => $request->description,
-                'price' => $request->price,
-                'file' => $file,
-                ]
-            );
-
-        return redirect('/listProducts');
-    }
-
+   
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param  String  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -304,4 +237,5 @@ class ProductsController extends Controller
         $product-> delete();
         return redirect('listProducts');
     }
+
 }

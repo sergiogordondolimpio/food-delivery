@@ -25,27 +25,11 @@ Route::get('/', function () {
 
 // routes to the products
 Route::middleware('auth')->group(function(){
-    // the first charge website with no previews
-    Route::get('/addProduct', function () {
-        $data = [
-            'title' => '',
-            'titlePreview' => 'Card Title',
-            'descriptionPreview' => "Some quick example text to build on the card title and make up the bulk of the card's content.",
-            'pricePreview' => '$ 1.10',
-            'filePreview' => 'storage/docs/food-image1.PNG',
-            'reload' => ''
-            ];
-        return view('/products/addProduct', $data);
-    });
-    
+    Route::get('/addProduct', [ProductsController::class, 'show'] );
     Route::post('add', [ProductsController::class, 'index']);
-    
-    //Route::post('add', [ProductsController::class, 'store']);
-    //Route::post('/preview', [ProductsController::class, 'storeOnlyForPreview']);
-    Route::get('/listProducts', [ProductsController::class, 'list'])->middleware('auth');
+    Route::get('/listProducts', [ProductsController::class, 'list']);
     Route::get('/delete/{id}', [ProductsController::class, 'destroy']);
     Route::get('/edit/{id}', [ProductsController::class, 'toUpdate']);
-    //Route::post('/update', [ProductsController::class, 'update']);
 });
 
 
@@ -75,11 +59,3 @@ Route::group(['middleware' => ['web']], function() {
     /* Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify'); // v5.x */
     Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 });
-
-//Route::view('/add', 'products/addProductApi');
-// routes of views of the login and register
-//route::view('login', 'auth/login');
-//Route::view('register', 'auth/registrer');
-
-
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
