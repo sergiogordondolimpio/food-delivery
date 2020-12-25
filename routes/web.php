@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function(){
     Route::post('add', [ProductsController::class, 'index']);
     Route::get('/listProducts', [ProductsController::class, 'list']);
     Route::get('/delete/{id}', [ProductsController::class, 'destroy']);
-    Route::get('/edit/{id}', [ProductsController::class, 'toUpdate']);
+    Route::get('/{id}', [ProductsController::class, 'toUpdate']);
 });
 
 

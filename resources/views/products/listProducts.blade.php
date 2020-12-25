@@ -13,7 +13,7 @@
                             <h2 class="card-title"> {{ $product->title }} </h2>
                             <p class="card-text"> {!! nl2br(e($product->description)) !!} </p>
                             <p class="font-weight-bold text-right h4"> {{ $product->price }} </p>
-                            <a href={{"/edit/".$product->id }} class="btn btn-primary btn-sm">Edit</a>
+                            <a href={{"/".$product->id }} class="btn btn-primary btn-sm">Edit</a>
                             <a href={{"/delete/".$product->id }} class="btn btn-primary btn-sm">Delete</a>
                         </div>
                     </div>

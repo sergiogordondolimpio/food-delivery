@@ -53,14 +53,25 @@ unset($__errorArgs, $__bag); ?>
                     <label>Select Image</label>
                     <input id="image" name="image" type="file" class="form-control-file">
                 </div>
+                <input type="hidden" name="id" value="<?php echo e($id); ?>">
                 <input type="hidden" name="imagePreview" value="<?php echo e($imagePreview); ?>">
                 <input type="hidden" name="titlePreview" value="<?php echo e($titlePreview); ?>">
                 <input type="hidden" name="descriptionPreview" value="<?php echo e($descriptionPreview); ?>">
                 <input type="hidden" name="pricePreview" value="<?php echo e($pricePreview); ?>">
 
-                <button type="submit" type="button" class="btn btn-primary" value="add" name="submitButton">Add</button>
+                <?php if($id == 'error'): ?>
+                <div class="alert alert-danger">The title do not exist, please select ADD button</div>
+                <?php endif; ?>
                 <button type="submit" type="button" class="btn btn-primary" value="preview" name="submitButton">Preview</button>
-                <button  type="submit" class="btn btn-primary" value="update" name="submitButton">Update</button>
+                <?php if($id): ?>
+                    <?php if($id == 'error'): ?>
+                        <button type="submit" type="button" class="btn btn-primary" value="add" name="submitButton">Add</button>
+                    <?php else: ?>
+                        <button  type="submit" class="btn btn-primary" value="update" name="submitButton">Update</button>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <button type="submit" type="button" class="btn btn-primary" value="add" name="submitButton">Add</button>
+                <?php endif; ?>
             </form>
         </div>
         <div class="col card p-4 m-4">

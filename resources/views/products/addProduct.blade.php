@@ -32,14 +32,25 @@
                     <label>Select Image</label>
                     <input id="image" name="image" type="file" class="form-control-file">
                 </div>
+                <input type="hidden" name="id" value="{{$id}}">
                 <input type="hidden" name="imagePreview" value="{{$imagePreview}}">
                 <input type="hidden" name="titlePreview" value="{{$titlePreview}}">
                 <input type="hidden" name="descriptionPreview" value="{{$descriptionPreview}}">
                 <input type="hidden" name="pricePreview" value="{{$pricePreview}}">
 
-                <button type="submit" type="button" class="btn btn-primary" value="add" name="submitButton">Add</button>
+                @if ($id == 'error')
+                <div class="alert alert-danger">The title do not exist, please select ADD button</div>
+                @endif
                 <button type="submit" type="button" class="btn btn-primary" value="preview" name="submitButton">Preview</button>
-                <button  type="submit" class="btn btn-primary" value="update" name="submitButton">Update</button>
+                @if ($id)
+                    @if ($id == 'error')
+                        <button type="submit" type="button" class="btn btn-primary" value="add" name="submitButton">Add</button>
+                    @else
+                        <button  type="submit" class="btn btn-primary" value="update" name="submitButton">Update</button>
+                    @endif
+                @else
+                    <button type="submit" type="button" class="btn btn-primary" value="add" name="submitButton">Add</button>
+                @endif
             </form>
         </div>
         <div class="col card p-4 m-4">

@@ -26,7 +26,7 @@ class ProductsController extends Controller
             'descriptionPreview' => "Some quick example text to build on the card title and make up the bulk of the card's content.",
             'pricePreview' => '$ 1.10',
             'imagePreview' => 'storage/docs/food-image1.PNG',
-            'reload' => ''
+            'id' => ''
             ];
         
         return view('/products/addProduct', $data);
@@ -60,6 +60,12 @@ class ProductsController extends Controller
 
                 $data = $this->preview($request);
                 if ($validator->fails()) {
+                    // assign the id in the $data to update the product
+                    // if the title exist
+                    if ($validator->errors()->first('title') == "The title has already been taken. Please click UPDATE if you want to update it"){
+                        $product = $this->search($request->title);
+                        $data['id'] = $product[0]->id;
+                    }
                     return view('/products/addProduct', $data)
                                 ->withErrors($validator);
                     }
@@ -83,6 +89,14 @@ class ProductsController extends Controller
                     ]);
                     
                 $data = $this->preview($request);
+
+                // if the title of product doesn't exist, because the user
+                // change it 
+                if ($this->search($data['title'])->isEmpty()){
+                    $data['id'] = 'error';
+                    return view('/products/addProduct', $data);
+                }
+
                 if ($validator->fails()) {
                     return view('/products/addProduct', $data)
                     ->withErrors($validator);
@@ -118,7 +132,7 @@ class ProductsController extends Controller
             'descriptionPreview' => $product[0]->description,
             'pricePreview' => "$ {$product[0]->price}",
             'imagePreview' => "storage/docs/{$product[0]->file}",
-            'reload' => 'true'
+            'id' => $id
             ];
         
         return view('/products/addProduct', $data);
@@ -195,6 +209,7 @@ class ProductsController extends Controller
         $data += ['title' => $request->title];
         $data += ['description' => $request->description];
         $data += ['price' => $request->price];
+        $data += ['id' => $request->id];
 
         return $data;
     }
@@ -216,11 +231,17 @@ class ProductsController extends Controller
     }
 
 
-    // search in database fot title
+    /**
+     * search in database fot title
+     *
+     * @param  String  $title
+     * @return Product 
+     */
     public function search($title)
     {
-        return Product::where("title", $title)->get();
-        
+        return DB::table('products')
+                    ->where('title', '=', $title)
+                    ->get();
     }
 
    
