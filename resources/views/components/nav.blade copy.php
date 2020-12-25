@@ -1,6 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-  
-    <div class="collapse navbar-collapse ml-5" id="navbarNavDropdown">
+    <div class="collapse navbar-collapse ml-5" id="navbarLeft">
       <a class="navbar-brand text-white" href="#">Navbar</a>
       <ul class="navbar-nav">
         <li class="nav-item active">
@@ -21,9 +20,15 @@
         </li>
       </ul>
     </div>
+    <nav class="navbar navbar-dark bg-dark">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLeft" aria-controls="navbarLeft" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav>
 
-    <div class="collapse navbar-collapse mr-5" id="navbarNavDropdown" style="justify-content: flex-end;">
-      <ul class="navbar-nav" style="align-items: center;">
+
+    <div class="collapse navbar-collapse mr-5" id="navbarRight" style="justify-content: flex-end;">
+      <ul class="navbar-nav">
         <li class="nav-item">
           @if (Auth::check())
             <span class="badge badge-light">{{ Auth::user()->name }}</span>
@@ -41,4 +46,9 @@
         </li>
       </ul>
     </div>
+    <nav class="navbar navbar-dark bg-dark">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarRight" aria-controls="navbarRight" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav>
   </nav>

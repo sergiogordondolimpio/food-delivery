@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 869b08de4f12bf9cff286a7a082cf979ede7134f
 # food-delivery
 =======
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
@@ -62,4 +66,8 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<<<<<<< HEAD
 >>>>>>> authUI
+=======
+>>>>>>> 81575a87f79d9198e363ee5f5084a93c6eb27a3d
+>>>>>>> 869b08de4f12bf9cff286a7a082cf979ede7134f
