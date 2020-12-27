@@ -7,9 +7,19 @@
     <div class="container">
         <div class="d-flex justify-content-center">
             <div class="row justify-content-center">
-                <?php for($j = 0; $j < 12; $j++): ?>
-                    <?php echo $__env->make('products/cardExample', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-                <?php endfor; ?>
+                <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center mt-5">
+                    <div class="card" style="min-width: 300px;">
+                        <img class="card-img-top" style="width: 100%;" src='<?php echo e(asset("storage/docs/$product->file")); ?>' alt="Card image cap">
+                        <div class="card-body">
+                            <h2 class="card-title"><?php echo e($product->title); ?></h2>
+                            <p class="card-text"><?php echo e($product->description); ?></p>
+                            <p class="font-weight-bold text-right h4"><?php echo e($product->price); ?></p>
+                            <a href="#" class="btn btn-primary btn-sm">Add cart</a>
+                        </div>
+                    </div>
+                </div>  
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         </div>
     </div>

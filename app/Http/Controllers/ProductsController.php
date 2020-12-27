@@ -231,6 +231,18 @@ class ProductsController extends Controller
     }
 
 
+     /**
+     * Display a listing of the resource in the Home.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function listHome()
+    {
+        $products = DB::table('products')->get();
+        return view('home', ['products' => $products]);
+    }
+
+
     /**
      * search in database fot title
      *

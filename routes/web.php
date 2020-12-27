@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use App\Http\Controllers\ProductsController;
-use App\Models\Product;
+//use App\Http\Controllers\CartsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,19 +17,19 @@ use App\Models\Product;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [ProductsController::class, 'listHome']);
+//Route::view('/', 'home');
 
 
 
-// routes to the products
+// routes to the products and cart
 Route::middleware('auth')->group(function(){
     Route::get('/addProduct', [ProductsController::class, 'show'] );
     Route::post('add', [ProductsController::class, 'index']);
     Route::get('/listProducts', [ProductsController::class, 'list']);
     Route::get('/delete/{id}', [ProductsController::class, 'destroy']);
     Route::get('/{id}', [ProductsController::class, 'toUpdate']);
+    //Route::get('/cart', [CartsController::class, 'show']);
 });
 
 
