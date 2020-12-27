@@ -28,19 +28,18 @@ Route::middleware('auth')->group(function(){
     Route::post('add', [ProductsController::class, 'index']);
     Route::get('/listProducts', [ProductsController::class, 'list']);
     Route::get('/delete/{id}', [ProductsController::class, 'destroy']);
-    Route::get('/{id}', [ProductsController::class, 'toUpdate']);
-    //Route::get('/cart', [CartsController::class, 'show']);
+    Route::get('/edit/{id}', [ProductsController::class, 'toUpdate']);
+    Route::post('edit/add', [ProductsController::class, 'index']);
+    Route::get('/cart', [CartsController::class, 'show']);
 });
 
 
 Route::group(['middleware' => ['web']], function() {
     // Authentication Routes...
-    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
     Route::post('login', 'Auth\LoginController@login');
     Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
     // Registration Routes...
-    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
     Route::post('register', 'Auth\RegisterController@register');
     
     // Password Reset Routes...
@@ -59,3 +58,7 @@ Route::group(['middleware' => ['web']], function() {
     /* Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify'); // v5.x */
     Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 });
+
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+   

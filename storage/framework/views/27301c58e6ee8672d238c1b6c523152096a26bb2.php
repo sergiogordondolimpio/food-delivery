@@ -13,7 +13,7 @@
                             <h2 class="card-title"> <?php echo e($product->title); ?> </h2>
                             <p class="card-text"> <?php echo nl2br(e($product->description)); ?> </p>
                             <p class="font-weight-bold text-right h4"> <?php echo e($product->price); ?> </p>
-                            <a href=<?php echo e("/".$product->id); ?> class="btn btn-primary btn-sm">Edit</a>
+                            <a href=<?php echo e("/edit/".$product->id); ?> class="btn btn-primary btn-sm">Edit</a>
                             <a href=<?php echo e("/delete/".$product->id); ?> class="btn btn-primary btn-sm">Delete</a>
                         </div>
                     </div>
