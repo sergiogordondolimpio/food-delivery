@@ -77,9 +77,9 @@
                     </ul>
                 </div>
 
-                <button type="button" class="btn btn-primary btn-sm">
-                    <a href="/cart" class="text-white mr-1">Cart</a>
-                    <span class="badge badge-light">0</span>
+                <button type="button" class="btn btn-primary btn-lg p-2">
+                    <a href="/cart" class="text-white mr-1" style="font-size: 0.9rem">Cart</a>
+                    <span class="badge badge-light">{{ App\Http\Controllers\CartsController::countItems() }}</span>
                 </button>
             </div>
         </nav>

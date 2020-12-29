@@ -14,26 +14,74 @@ use App\Models\Product;
 
 class CartsController extends Controller
 {
-    //
 
+    /**
+     *  Show the cartItems and the products of the client
+     *  in the view /cart
+     *  
+     *  @return Illuminate\Http\Response
+     */
     public function show(){
 
-        /*
-            to add:
-            $user = Post::find(value);
-            $cart = new Cart;
-            $user->carts()save($cart);
-        */
+        // find last cart of the client
+        $cart = (User::find(Auth::user()->id)->carts)->last();
 
-        dd('hola');
-        return view('cart/cart');
+        // substract 15 days of today with Carbon
+        $twoWeeksAgo = now()->subDays(15)->toDateTimeString();
+        
+        // if there is a cart or the cart is not before two weeks
+        if ($cart || $cart->created_at->toDateTimeString() > $twoWeeksAgo){
+            $cartItems = Cart::find($cart->id)->cart_items;
+        }
+
+        $products = Product::all()->keyBy('id');
+
+        //dd($cartItems);
+
+        return view('cart/cart', [
+            'cartItems' => $cartItems,
+            'products' => $products
+        ]);
     }
+
+    /**
+     *  Count the items of the client for the last two weeks
+     *  add in the cart
+     *  
+     *  @return Integer
+     */
+    public static function countItems()
+    {
+        // check if someone is logged
+        if (Auth::check()){
+
+            // find last cart of the client
+            $cart = (User::find(Auth::user()->id)->carts)->last();
+            
+            // substract 15 days of today with Carbon
+            $twoWeeksAgo = now()->subDays(15)->toDateTimeString();
+            
+            // if there is a cart or the cart is not before two weeks
+            if ($cart || $cart->created_at->toDateTimeString() > $twoWeeksAgo){
+                $count = 0;
+                $cartItems = Cart::find($cart->id)->cart_items;
+                foreach ($cartItems as $cartItem){
+                    $count += $cartItem->quantity;
+                }
+                return $count;
+            }
+        }
+
+        return 0;
+    }
+
 
     /**
      *  Function to save the item added to the cart of 
      *  the user
      * 
-     *  @param  \Illuminate\Http\Request $request
+     *  @param \Illuminate\Http\Request $request
+     *  @param App\Models\Product $id
      * 
      *  @return \Illuminate\Http\Response
      */
@@ -88,8 +136,8 @@ class CartsController extends Controller
         }
         // create the item
         $cart->cart_items()->save($cartItem);
-        dd('save');
-
+        
+        return redirect('/');
     }
 
 
