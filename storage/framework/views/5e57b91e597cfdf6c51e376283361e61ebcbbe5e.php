@@ -15,7 +15,7 @@
                             <h2 class="card-title"><?php echo e($product->title); ?></h2>
                             <p class="card-text"><?php echo e($product->description); ?></p>
                             <p class="font-weight-bold text-right h4"><?php echo e($product->price); ?></p>
-                            <a href="#" class="btn btn-primary btn-sm">Add cart</a>
+                            <a href="/cart/<?php echo e($product->id); ?>" class="btn btn-primary btn-sm">Add cart</a>
                         </div>
                     </div>
                 </div>  

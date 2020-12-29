@@ -80,7 +80,8 @@
                 </div>
 
                 <button type="button" class="btn btn-primary btn-sm">
-                    Cart <span class="badge badge-light">0</span>
+                    <a href="/cart" class="text-white mr-1">Cart</a>
+                    <span class="badge badge-light">0</span>
                 </button>
             </div>
         </nav>
