@@ -10,7 +10,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    public function getProduct()
+    public function cartItem()
     {
         return $this->hasOne(CartItem::class);
     }

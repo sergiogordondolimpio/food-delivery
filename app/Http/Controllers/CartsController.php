@@ -71,9 +71,75 @@ class CartsController extends Controller
                 return $count;
             }
         }
-
         return 0;
     }
+
+
+    /**
+     *  Count the total to pay, amount
+     *  
+     *  @return Float
+     */
+    public static function amount()
+    {
+        // check if someone is logged
+        if (Auth::check()){
+
+            // find last cart of the client
+            $cart = (User::find(Auth::user()->id)->carts)->last();
+            
+            // substract 15 days of today with Carbon
+            $twoWeeksAgo = now()->subDays(15)->toDateTimeString();
+            
+            // if there is a cart or the cart is not before two weeks
+            if ($cart || $cart->created_at->toDateTimeString() > $twoWeeksAgo){
+                $amount = 0;
+                $cartItems = Cart::find($cart->id)->cart_items;
+                foreach ($cartItems as $cartItem){
+                    // find the product belongsTo the cartItem
+                    $product = CartItem::find($cartItem->id)->product;
+                    // add the product of the number of products in the 
+                    // cartItems plus the price of the product
+                    $amount += $cartItem->quantity.$product->price;
+                }
+                return $amount;
+            }
+        }
+        return 0;
+    }
+
+
+    /**
+     *  Function to delete a CartItem
+     * 
+     *  @param App\Models\CartItem $id
+     * 
+     *  @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $cartItem = CartItem::find($id);
+
+        $cartItem->delete();
+
+        return redirect('/cart');
+    }
+
+
+     /**
+     *  Function to checkout
+     * 
+     *  @param App\Models\CartItem $id
+     * 
+     *  @return \Illuminate\Http\Response
+     */
+    public function checkout(Request $request)
+    {
+        
+        dd($request);
+        return $request;
+    }
+
 
 
     /**

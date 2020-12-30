@@ -79,9 +79,11 @@
                     </ul>
                 </div>
 
-                <button type="button" class="btn btn-primary btn-lg p-2">
+                <button type="button" class="btn btn-primary btn-lg px-2 py-1">
                     <a href="/cart" class="text-white mr-1" style="font-size: 0.9rem">Cart</a>
-                    <span class="badge badge-light"><?php echo e(App\Http\Controllers\CartsController::countItems()); ?></span>
+                    <?php if(!url()->current() == 'http://food-delivery.loc/cart'): ?>)
+                        <span class="badge badge-light"><?php echo e(App\Http\Controllers\CartsController::countItems()); ?></span>
+                    <?php endif; ?>
                 </button>
             </div>
         </nav>
