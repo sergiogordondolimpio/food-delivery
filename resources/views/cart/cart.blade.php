@@ -12,7 +12,6 @@
                 <form action="/checkout" method="post">
                     @csrf
                     @foreach($cartItems as $cartItem)
-                        <input type="hidden" name="cartItems[]" value="{{ $cartItem->id }}">
                         <input type="hidden" id="cartItems[{{ $cartItem->id }}]" name="quantity[{{ $cartItem->id }}]" value="{{ $cartItem->quantity }}">
                     @endforeach
                     <button type="submit" class="btn btn-primary px-2 py-1">Pay</button>
@@ -60,6 +59,7 @@
             (sign == '-') ? res-- : res++
             // set in the inner of the element
             document.getElementById("items").innerText = "Items ("+ res +")";
+            document.getElementById("nav-cart").innerText = res;
         }
 
         function plusMinusAmount(price, sign){
@@ -75,6 +75,7 @@
         // add 1 to the input value and set in it
         function plus(id,price){
             document.getElementById(id).value++ 
+            // add one to the hidden input in the form too
             document.getElementById("cartItems["+id+"]").value++ 
             plusMinusItem(document.getElementById("items").innerText, "+")
             plusMinusAmount(price, '+')
@@ -85,6 +86,7 @@
             // only if value is more than 0 can substract
             if (document.getElementById(id).value > 0){
                 document.getElementById(id).value--
+                document.getElementById("cartItems["+id+"]").value--
                 plusMinusItem(document.getElementById("items").innerText, "-")
                 plusMinusAmount(price, '-')
             }

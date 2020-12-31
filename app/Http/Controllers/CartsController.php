@@ -29,14 +29,15 @@ class CartsController extends Controller
         // substract 15 days of today with Carbon
         $twoWeeksAgo = now()->subDays(15)->toDateTimeString();
         
-        // if there is a cart or the cart is not before two weeks
-        if ($cart || $cart->created_at->toDateTimeString() > $twoWeeksAgo){
+       // if there is a cart and the cart is not chekcout
+        // and the cart is not before two weeks
+        if ($cart && $cart->checkout == false && $cart->created_at->toDateTimeString() > $twoWeeksAgo){
             $cartItems = Cart::find($cart->id)->cart_items;
+        }else{
+            return redirect('/');
         }
 
         $products = Product::all()->keyBy('id');
-
-        //dd($cartItems);
 
         return view('cart/cart', [
             'cartItems' => $cartItems,
@@ -61,16 +62,18 @@ class CartsController extends Controller
             // substract 15 days of today with Carbon
             $twoWeeksAgo = now()->subDays(15)->toDateTimeString();
             
-            // if there is a cart or the cart is not before two weeks
-            if ($cart || $cart->created_at->toDateTimeString() > $twoWeeksAgo){
+             // if there is a cart and the cart is not chekcout
+            // and the cart is not before two weeks
+            if ($cart && $cart->checkout == false && $cart->created_at->toDateTimeString() > $twoWeeksAgo){
                 $count = 0;
                 $cartItems = Cart::find($cart->id)->cart_items;
                 foreach ($cartItems as $cartItem){
                     $count += $cartItem->quantity;
                 }
-                return $count;
+            return $count;
             }
         }
+
         return 0;
     }
 
@@ -82,30 +85,23 @@ class CartsController extends Controller
      */
     public static function amount()
     {
-        // check if someone is logged
-        if (Auth::check()){
-
-            // find last cart of the client
-            $cart = (User::find(Auth::user()->id)->carts)->last();
-            
-            // substract 15 days of today with Carbon
-            $twoWeeksAgo = now()->subDays(15)->toDateTimeString();
-            
-            // if there is a cart or the cart is not before two weeks
-            if ($cart || $cart->created_at->toDateTimeString() > $twoWeeksAgo){
-                $amount = 0;
-                $cartItems = Cart::find($cart->id)->cart_items;
-                foreach ($cartItems as $cartItem){
-                    // find the product belongsTo the cartItem
-                    $product = CartItem::find($cartItem->id)->product;
-                    // add the product of the number of products in the 
-                    // cartItems plus the price of the product
-                    $amount += $cartItem->quantity*$product->price;
-                }
-                return $amount;
-            }
+        // find last cart of the client
+        $cart = (User::find(Auth::user()->id)->carts)->last();
+        
+        // substract 15 days of today with Carbon
+        $twoWeeksAgo = now()->subDays(15)->toDateTimeString();
+        
+        $cartItems = Cart::find($cart->id)->cart_items;
+        $amount = 0;
+        foreach ($cartItems as $cartItem){
+            // find the product belongsTo the cartItem
+            $product = CartItem::find($cartItem->id)->product;
+            // add the product of the number of products in the 
+            // cartItems plus the price of the product
+            $amount += $cartItem->quantity*$product->price;
         }
-        return 0;
+            
+        return $amount;
     }
 
 
@@ -135,9 +131,40 @@ class CartsController extends Controller
      */
     public function checkout(Request $request)
     {
+        // find last cart of the client
+        $cart = (User::find(Auth::user()->id)->carts)->last();
         
-        dd($request);
-        return $request;
+        // substract 15 days of today with Carbon
+        $twoWeeksAgo = now()->subDays(15)->toDateTimeString();
+        
+        $items = 0;
+        $amount = 0;
+        // find all the cartItems of the cart
+        $cartItems = Cart::find($cart->id)->cart_items;
+        foreach ($cartItems as $cartItem){
+        // if there is some cartItem that has not the same value
+        // than the input, change it, and save in the database
+        if ($request->quantity[$cartItem->id] != $cartItem->quantity){
+            $cartItem->quantity = $request->quantity[$cartItem->id];
+            $cart->cart_items()->save($cartItem);
+        }
+        $items++;
+        $product = CartItem::find($cartItem->id)->product;
+        $amount += $cartItem->quantity*$product->price;
+        }
+
+        $products = Product::all()->keyBy('id');
+
+        // change the checkout value of the cart to true,
+        $cart->checkout = true;
+        $cart->save();
+
+        return view('cart/checkout', [
+                'cartItems' => $cartItems,
+                'products' => $products,
+                'items' => $items,
+                'amount' => $amount
+                ]);
     }
 
 
@@ -169,7 +196,7 @@ class CartsController extends Controller
         $twoWeeksAgo = now()->subDays(15)->toDateTimeString();
         // if the user has not cart without checkout or
         // before the last two weeks, create a cart and save in DB
-        if (!$cart || $cart->created_at->toDateTimeString() < $twoWeeksAgo){
+        if (!$cart || $cart->checkout == true || $cart->created_at->toDateTimeString() < $twoWeeksAgo){
             $newCart = new Cart;
             $newCart->user_id = $user->id;
             $newCart->checkout = false;
@@ -200,7 +227,7 @@ class CartsController extends Controller
             $cartItem->quantity = 1;
             $cartItem->price = $product->price;
         }
-        // create the item
+        // save the item
         $cart->cart_items()->save($cartItem);
         
         return redirect('/');
