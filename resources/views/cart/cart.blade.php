@@ -11,8 +11,9 @@
             <div class="col-sm-6 d-flex flex-row-reverse align-items-center">
                 <form action="/checkout" method="post">
                     @csrf
-                    @foreach($cartItems as $item)
-                        <input type="hidden" name="cartItems[]" value="{{ $item->id }}">
+                    @foreach($cartItems as $cartItem)
+                        <input type="hidden" name="cartItems[]" value="{{ $cartItem->id }}">
+                        <input type="hidden" id="cartItems[{{ $cartItem->id }}]" name="quantity[{{ $cartItem->id }}]" value="{{ $cartItem->quantity }}">
                     @endforeach
                     <button type="submit" class="btn btn-primary px-2 py-1">Pay</button>
                 </form>
@@ -37,9 +38,9 @@
                     </div>
                     <div class="col-sm-3 align-self-center">      
                         <div class="row align-items-center">
-                            <button type="button" onclick="minus('{{$products[$cartItem->product_id]->title}}',{{$products[$cartItem->product_id]->price}})" class="btn btn-link p-2"><h5>-</h5></button>
-                            <input type="text" id="{{$products[$cartItem->product_id]->title}}" class="form-control w-25 d-inline" value="{{$cartItem->quantity}}">
-                            <button type="button" onclick="plus('{{$products[$cartItem->product_id]->title}}',{{$products[$cartItem->product_id]->price}})" class="btn btn-link p-2"><h5>+</h5></button>
+                            <button type="button" onclick="minus('{{$cartItem->id}}',{{$products[$cartItem->product_id]->price}})" class="btn btn-link p-2"><h5>-</h5></button>
+                            <input type="text" id="{{$cartItem->id}}" class="form-control w-25 d-inline" value="{{$cartItem->quantity}}">
+                            <button type="button" onclick="plus('{{$cartItem->id}}',{{$products[$cartItem->product_id]->price}})" class="btn btn-link p-2"><h5>+</h5></button>
                         </div>           
                     </div>
                 </div>
@@ -74,6 +75,7 @@
         // add 1 to the input value and set in it
         function plus(id,price){
             document.getElementById(id).value++ 
+            document.getElementById("cartItems["+id+"]").value++ 
             plusMinusItem(document.getElementById("items").innerText, "+")
             plusMinusAmount(price, '+')
         } 

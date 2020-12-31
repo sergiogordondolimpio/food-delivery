@@ -100,7 +100,7 @@ class CartsController extends Controller
                     $product = CartItem::find($cartItem->id)->product;
                     // add the product of the number of products in the 
                     // cartItems plus the price of the product
-                    $amount += $cartItem->quantity.$product->price;
+                    $amount += $cartItem->quantity*$product->price;
                 }
                 return $amount;
             }
